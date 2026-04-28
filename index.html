@@ -552,17 +552,18 @@ function toggleAMRAP(){
 }
 
 // ─── PIN ───
-const PIN_KEY='kb_pin';
-let pinInput='',pinMode='enter',pinPending='';
+// Hash of the correct PIN — input is hashed via SHA-256 and compared, PIN never stored in plain text
+const PIN_HASH='6161b2838ffa6ce17b84db3b45b4f8437855ecf43e75de2d1ad0008eaae91aa0';
+let pinInput='';
 
-function initApp(){
-  pinMode=localStorage.getItem(PIN_KEY)?'enter':'set';
-  renderPin();
+async function sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
+function initApp(){renderPin();}
+
 function renderPin(){
-  const titles={set:'Set a PIN',confirm:'Confirm PIN',enter:'KB Tracker'};
-  const subs={set:'Choose a 4-digit PIN to lock the app',confirm:'Re-enter your PIN to confirm',enter:'Enter PIN'};
   const dots=[0,1,2,3].map(i=>`<div style="width:14px;height:14px;border-radius:50%;background:${i<pinInput.length?'#f0c040':'var(--bd)'};transition:background .15s"></div>`).join('');
   const keys=[1,2,3,4,5,6,7,8,9,'','0','⌫'].map(k=>{
     if(k==='')return'<div></div>';
@@ -570,8 +571,8 @@ function renderPin(){
     return`<button onclick="${back?'pinDel()':'pinTap('+k+')'}" style="height:64px;border-radius:14px;background:var(--s1);border:1px solid var(--bd);font-size:${back?'1.4':'1.3'}rem;font-weight:700;color:${back?'var(--tm)':'var(--tx)'};cursor:pointer">${k}</button>`;
   }).join('');
   app.innerHTML=`<div style="min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem">
-    <div style="font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f0c040,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.25rem">${titles[pinMode]}</div>
-    <div style="font-size:.8rem;color:var(--tm);margin-bottom:2.5rem">${subs[pinMode]}</div>
+    <div style="font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f0c040,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.25rem">KB Tracker</div>
+    <div style="font-size:.8rem;color:var(--tm);margin-bottom:2.5rem">Enter PIN</div>
     <div id="pin-dots" style="display:flex;gap:1rem;margin-bottom:3rem">${dots}</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;width:100%;max-width:280px">${keys}</div>
   </div>`;
@@ -586,16 +587,10 @@ function pinTap(n){
 
 function pinDel(){pinInput=pinInput.slice(0,-1);renderPin();}
 
-function checkPin(){
-  if(pinMode==='enter'){
-    if(pinInput===localStorage.getItem(PIN_KEY)){render();}
-    else{pinInput='';shakeDots();}
-  } else if(pinMode==='set'){
-    pinPending=pinInput;pinInput='';pinMode='confirm';renderPin();
-  } else {
-    if(pinInput===pinPending){localStorage.setItem(PIN_KEY,pinInput);render();}
-    else{pinInput='';pinMode='set';pinPending='';shakeDots();}
-  }
+async function checkPin(){
+  const h=await sha256(pinInput);
+  if(h===PIN_HASH){render();}
+  else{pinInput='';shakeDots();}
 }
 
 function shakeDots(){
