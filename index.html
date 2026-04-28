@@ -174,8 +174,8 @@ function saveWorkout(){
   try{localStorage.setItem(HIST_KEY,JSON.stringify(h));}
   catch(e){console.warn('Could not save workout history:',e);}
 }
-function lastDone(id){
-  const e=loadHistory().find(x=>x.dayId===id);
+function lastDone(id,hist){
+  const e=hist.find(x=>x.dayId===id);
   if(!e)return null;
   const days=Math.floor((Date.now()-new Date(e.date))/864e5);
   if(days===0)return'Today';
@@ -216,7 +216,7 @@ function renderSelect(){
   // All values from DAYS are hardcoded constants; history values are sanitized in loadHistory()
   const hist=loadHistory();
   const dayBtns=DAYS.map(d=>{
-    const ld=lastDone(d.id); // returns 'Today','Yesterday','Nd ago', or null — no user input
+    const ld=lastDone(d.id,hist); // returns 'Today','Yesterday','Nd ago', or null — no user input
     const ldHtml=ld?` · <span style="color:${ld==='Today'?'#4ade80':'var(--tm)'}">${ld}</span>`:'';
     return`<button class="day-btn" onclick="startDay(${d.id})">
       <div class="day-num" style="background:${d.color}20;color:${d.color}">${d.id}</div>
@@ -555,7 +555,7 @@ function toggleAMRAP(){
 // ─── PIN ───
 // Hash of the correct PIN — input is hashed via SHA-256 and compared, PIN never stored in plain text
 const PIN_HASH='6161b2838ffa6ce17b84db3b45b4f8437855ecf43e75de2d1ad0008eaae91aa0';
-let pinInput='';
+let pinInput='',pinError='';
 
 async function sha256(str){
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
@@ -575,18 +575,20 @@ function renderPin(){
     <div style="font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f0c040,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.25rem">KB Tracker</div>
     <div style="font-size:.8rem;color:var(--tm);margin-bottom:2.5rem">Enter PIN</div>
     <div id="pin-dots" style="display:flex;gap:1rem;margin-bottom:3rem">${dots}</div>
+    <div id="pin-err" style="color:var(--or);font-size:.7rem;margin-top:-2rem;margin-bottom:2rem;text-align:center;min-height:1em"></div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;width:100%;max-width:280px">${keys}</div>
   </div>`;
+  if(pinError){const e=$('pin-err');if(e)e.textContent=pinError;}
 }
 
 function pinTap(n){
   if(pinInput.length>=4)return;
-  pinInput+=String(n);
+  pinError='';pinInput+=String(n);
   renderPin();
   if(pinInput.length===4)setTimeout(checkPin,120);
 }
 
-function pinDel(){pinInput=pinInput.slice(0,-1);renderPin();}
+function pinDel(){pinError='';pinInput=pinInput.slice(0,-1);renderPin();}
 
 async function checkPin(){
   try{
@@ -596,15 +598,7 @@ async function checkPin(){
   }catch(e){
     // crypto.subtle is undefined on file:// or non-secure origins
     console.error('PIN check failed — serve over HTTPS:',e);
-    pinInput='';
-    const el=$('pin-dots');
-    if(el){
-      [...el.children].forEach(d=>{d.style.background='#fb923c';});
-      const msg=document.createElement('div');
-      msg.style.cssText='color:#fb923c;font-size:.7rem;margin-top:1rem;text-align:center';
-      msg.textContent='Serve over HTTPS to enable PIN';
-      el.parentNode.insertBefore(msg,el.nextSibling);
-    }
+    pinInput='';pinError='Serve over HTTPS to enable PIN';renderPin();
   }
 }
 
