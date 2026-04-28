@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A single-file, standalone HTML workout tracker app designed for iPhone (saved as a home screen PWA). No build system, no dependencies, no npm — everything is in `workout-tracker-standalone.html`.
+A single-file, standalone HTML workout tracker app designed for iPhone (saved as a home screen PWA). No build system, no dependencies, no npm — everything is in `index.html`.
 
 ## Running / Testing
 

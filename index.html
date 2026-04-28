@@ -165,13 +165,14 @@ function loadHistory(){
     return (JSON.parse(localStorage.getItem(HIST_KEY)||'[]')||[])
       .filter(e=>Number.isInteger(e.dayId)&&Number.isFinite(e.elapsed)&&typeof e.date==='string')
       .map(e=>({dayId:e.dayId,elapsed:Math.max(0,Math.floor(e.elapsed)),date:new Date(e.date).toISOString()}));
-  }catch{return[];}
+  }catch(e){console.warn('loadHistory failed:',e);return[];}
 }
 function saveWorkout(){
   const h=loadHistory();
   h.unshift({date:new Date().toISOString(),dayId,elapsed});
   if(h.length>100)h.length=100;
-  localStorage.setItem(HIST_KEY,JSON.stringify(h));
+  try{localStorage.setItem(HIST_KEY,JSON.stringify(h));}
+  catch(e){console.warn('Could not save workout history:',e);}
 }
 function lastDone(id){
   const e=loadHistory().find(x=>x.dayId===id);
@@ -209,7 +210,7 @@ function render(){
   else renderWorkout();
 }
 
-function clearTimers(){clearInterval(restId);clearInterval(timerId);clearInterval(emomId);clearInterval(amrapId);resting=false;timerOn=false;}
+function clearTimers(){clearInterval(restId);clearInterval(timerId);clearInterval(emomId);clearInterval(amrapId);resting=false;timerOn=false;emomOn=false;amrapOn=false;}
 
 function renderSelect(){
   // All values from DAYS are hardcoded constants; history values are sanitized in loadHistory()
@@ -588,9 +589,23 @@ function pinTap(n){
 function pinDel(){pinInput=pinInput.slice(0,-1);renderPin();}
 
 async function checkPin(){
-  const h=await sha256(pinInput);
-  if(h===PIN_HASH){render();}
-  else{pinInput='';shakeDots();}
+  try{
+    const h=await sha256(pinInput);
+    if(h===PIN_HASH){render();}
+    else{pinInput='';shakeDots();}
+  }catch(e){
+    // crypto.subtle is undefined on file:// or non-secure origins
+    console.error('PIN check failed — serve over HTTPS:',e);
+    pinInput='';
+    const el=$('pin-dots');
+    if(el){
+      [...el.children].forEach(d=>{d.style.background='#fb923c';});
+      const msg=document.createElement('div');
+      msg.style.cssText='color:#fb923c;font-size:.7rem;margin-top:1rem;text-align:center';
+      msg.textContent='Serve over HTTPS to enable PIN';
+      el.parentNode.insertBefore(msg,el.nextSibling);
+    }
+  }
 }
 
 function shakeDots(){
