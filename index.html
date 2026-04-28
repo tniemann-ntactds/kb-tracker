@@ -174,21 +174,21 @@ const MMAP={
 };
 
 function muscleSVG(groups){
-  const s='#22262f',b='#3a3f4e';
-  let r=`<ellipse cx="30" cy="7.5" rx="6" ry="7" fill="${s}" stroke="${b}" stroke-width=".8"/>
-<rect x="27" y="13" width="6" height="4" rx="2" fill="${s}"/>
-<path d="M21,13 Q25,11 30,11 Q35,11 39,13 L41,41 Q38,44 30,44 Q22,44 19,41 Z" fill="${s}" stroke="${b}" stroke-width=".8"/>
-<path d="M21,14 Q17,17 16,21 L15,39 Q15,41 17,41 L21,41Z" fill="${s}" stroke="${b}" stroke-width=".6"/>
-<path d="M39,14 Q43,17 44,21 L45,39 Q45,41 43,41 L39,41Z" fill="${s}" stroke="${b}" stroke-width=".6"/>
-<rect x="7" y="20" rx="3" width="7" height="18" fill="${s}" stroke="${b}" stroke-width=".7" transform="rotate(-12 10.5 29)"/>
-<rect x="46" y="20" rx="3" width="7" height="18" fill="${s}" stroke="${b}" stroke-width=".7" transform="rotate(12 49.5 29)"/>
-<rect x="7" y="35" rx="2.5" width="6" height="10" fill="${s}" stroke="${b}" stroke-width=".6" transform="rotate(-8 10 40)"/>
-<rect x="47" y="35" rx="2.5" width="6" height="10" fill="${s}" stroke="${b}" stroke-width=".6" transform="rotate(8 50 40)"/>
-<rect x="21" y="41" rx="3" width="8" height="22" fill="${s}" stroke="${b}" stroke-width=".8" transform="rotate(-2 25 52)"/>
-<rect x="31" y="41" rx="3" width="8" height="22" fill="${s}" stroke="${b}" stroke-width=".8" transform="rotate(2 35 52)"/>
-<ellipse cx="23" cy="62" rx="4" ry="3" fill="${s}" stroke="${b}" stroke-width=".5"/>
-<ellipse cx="37" cy="62" rx="4" ry="3" fill="${s}" stroke="${b}" stroke-width=".5"/>`;
-  groups.forEach(g=>{const p=MMAP[g.toLowerCase()];if(p)r+=`<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="3" fill="#fb923c" opacity=".75"/>`;});
+  const s='#1c1f2a',b='#2a2f42';
+  let r=`<defs><filter id="mg" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<ellipse cx="30" cy="7" rx="5.5" ry="6.5" fill="${s}" stroke="${b}" stroke-width=".8"/>
+<path d="M27.5,13 L32.5,13 L32,16 L28,16 Z" fill="${s}" stroke="${b}" stroke-width=".5"/>
+<path d="M17,16 L43,16 L41,40 Q38,44 30,44 Q22,44 19,40 Z" fill="${s}" stroke="${b}" stroke-width=".9"/>
+<path d="M21,43 L39,43 L40.5,48 L19.5,48 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M17,16 L10,19 L9,36 L14,37 L18,24 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M43,16 L50,19 L51,36 L46,37 L42,24 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M9,36 L7,42 L9,48 L13,47 L14,37 Z" fill="${s}" stroke="${b}" stroke-width=".6"/>
+<path d="M51,36 L53,42 L51,48 L47,47 L46,37 Z" fill="${s}" stroke="${b}" stroke-width=".6"/>
+<path d="M19.5,48 L26.5,48 L26,63 L20,63 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M33.5,48 L40.5,48 L40,63 L34,63 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M20,63 L26,63 L24.5,68 L21,68 Z" fill="${s}" stroke="${b}" stroke-width=".6"/>
+<path d="M34,63 L40,63 L38.5,68 L35,68 Z" fill="${s}" stroke="${b}" stroke-width=".6"/>`;
+  groups.forEach(g=>{const p=MMAP[g.toLowerCase()];if(p)r+=`<path d="${p.d}" fill="#fb923c" opacity=".75" filter="url(#mg)"/>`;});
   return `<svg width="72" height="72" viewBox="0 0 60 68" fill="none">${r}</svg>`;
 }
 
