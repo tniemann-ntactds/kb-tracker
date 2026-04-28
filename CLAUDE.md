@@ -62,3 +62,17 @@ Add to `DAYS` array. Section types:
 - Normal: `{name, note, ex[]}` — each exercise: `{k (MDB key), d (display), s (sets), rp (reps), rs (rest seconds), ti (timed bool), t (seconds), fb (feedback bool)}`
 - EMOM: add `emom:true, emomDur` (seconds) to section
 - AMRAP: add `amrap:true, amrapDur` (seconds) to section
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as local markdown files under `.scratch/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Four active roles: `needs-triage`, `needs-info`, `ready-for-agent`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout — one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

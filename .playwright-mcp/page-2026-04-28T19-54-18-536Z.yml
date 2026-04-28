@@ -1,0 +1,41 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]: Workout Tracker
+    - generic [ref=e5]: Select today's workout
+  - generic [ref=e6]:
+    - button "1 Push & Squat Strength · ~35 min ›" [ref=e7] [cursor=pointer]:
+      - generic [ref=e8]: "1"
+      - generic [ref=e9]:
+        - generic [ref=e10]: Push & Squat
+        - generic [ref=e11]: Strength · ~35 min
+      - generic [ref=e12]: ›
+    - button "2 Cardio + Intervals Conditioning · ~30 min ›" [ref=e13] [cursor=pointer]:
+      - generic [ref=e14]: "2"
+      - generic [ref=e15]:
+        - generic [ref=e16]: Cardio + Intervals
+        - generic [ref=e17]: Conditioning · ~30 min
+      - generic [ref=e18]: ›
+    - button "3 Hinge & Pull Strength · ~35 min ›" [ref=e19] [cursor=pointer]:
+      - generic [ref=e20]: "3"
+      - generic [ref=e21]:
+        - generic [ref=e22]: Hinge & Pull
+        - generic [ref=e23]: Strength · ~35 min
+      - generic [ref=e24]: ›
+    - button "4 EMOM & Complexes Conditioning · ~30 min ›" [ref=e25] [cursor=pointer]:
+      - generic [ref=e26]: "4"
+      - generic [ref=e27]:
+        - generic [ref=e28]: EMOM & Complexes
+        - generic [ref=e29]: Conditioning · ~30 min
+      - generic [ref=e30]: ›
+    - button "5 Total Body Functional Strength · ~40 min ›" [ref=e31] [cursor=pointer]:
+      - generic [ref=e32]: "5"
+      - generic [ref=e33]:
+        - generic [ref=e34]: Total Body Functional
+        - generic [ref=e35]: Strength · ~40 min
+      - generic [ref=e36]: ›
+    - button "6 Long Cardio + Finisher Conditioning · ~35 min ›" [ref=e37] [cursor=pointer]:
+      - generic [ref=e38]: "6"
+      - generic [ref=e39]:
+        - generic [ref=e40]: Long Cardio + Finisher
+        - generic [ref=e41]: Conditioning · ~35 min
+      - generic [ref=e42]: ›
