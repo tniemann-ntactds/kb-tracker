@@ -11,6 +11,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f1115;--s1:#1a1d24;--s2:#22262f;--bd:#2d323d;--tx:#e8e9ec;--tm:#8b8f9a;--ac:#f0c040;--gn:#4ade80;--bl:#60a5fa;--rd:#f87171;--or:#fb923c;--pr:#a78bfa;--cy:#22d3ee}
 body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;min-height:100vh;min-height:100dvh;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
 button{font-family:inherit;-webkit-appearance:none}
 .ring-wrap{position:relative;margin:0 auto}
 .ring-wrap svg{transform:rotate(-90deg)}
@@ -550,8 +551,62 @@ function toggleAMRAP(){
   },1000);
 }
 
+// ─── PIN ───
+const PIN_KEY='kb_pin';
+let pinInput='',pinMode='enter',pinPending='';
+
+function initApp(){
+  pinMode=localStorage.getItem(PIN_KEY)?'enter':'set';
+  renderPin();
+}
+
+function renderPin(){
+  const titles={set:'Set a PIN',confirm:'Confirm PIN',enter:'KB Tracker'};
+  const subs={set:'Choose a 4-digit PIN to lock the app',confirm:'Re-enter your PIN to confirm',enter:'Enter PIN'};
+  const dots=[0,1,2,3].map(i=>`<div style="width:14px;height:14px;border-radius:50%;background:${i<pinInput.length?'#f0c040':'var(--bd)'};transition:background .15s"></div>`).join('');
+  const keys=[1,2,3,4,5,6,7,8,9,'','0','⌫'].map(k=>{
+    if(k==='')return'<div></div>';
+    const back=k==='⌫';
+    return`<button onclick="${back?'pinDel()':'pinTap('+k+')'}" style="height:64px;border-radius:14px;background:var(--s1);border:1px solid var(--bd);font-size:${back?'1.4':'1.3'}rem;font-weight:700;color:${back?'var(--tm)':'var(--tx)'};cursor:pointer">${k}</button>`;
+  }).join('');
+  app.innerHTML=`<div style="min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem">
+    <div style="font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f0c040,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.25rem">${titles[pinMode]}</div>
+    <div style="font-size:.8rem;color:var(--tm);margin-bottom:2.5rem">${subs[pinMode]}</div>
+    <div id="pin-dots" style="display:flex;gap:1rem;margin-bottom:3rem">${dots}</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;width:100%;max-width:280px">${keys}</div>
+  </div>`;
+}
+
+function pinTap(n){
+  if(pinInput.length>=4)return;
+  pinInput+=String(n);
+  renderPin();
+  if(pinInput.length===4)setTimeout(checkPin,120);
+}
+
+function pinDel(){pinInput=pinInput.slice(0,-1);renderPin();}
+
+function checkPin(){
+  if(pinMode==='enter'){
+    if(pinInput===localStorage.getItem(PIN_KEY)){render();}
+    else{pinInput='';shakeDots();}
+  } else if(pinMode==='set'){
+    pinPending=pinInput;pinInput='';pinMode='confirm';renderPin();
+  } else {
+    if(pinInput===pinPending){localStorage.setItem(PIN_KEY,pinInput);render();}
+    else{pinInput='';pinMode='set';pinPending='';shakeDots();}
+  }
+}
+
+function shakeDots(){
+  const el=$('pin-dots');if(!el)return;
+  [...el.children].forEach(d=>{d.style.background='#f87171';});
+  el.style.animation='shake .35s ease';
+  setTimeout(()=>{el.style.animation='';renderPin();},400);
+}
+
 // ─── INIT ───
-render();
+initApp();
 </script>
 </body>
 </html>
