@@ -156,6 +156,34 @@ const fmt=s=>`${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
 const $=id=>document.getElementById(id);
 const app=$('app');
 
+// ─── HISTORY ───
+const HIST_KEY='kb_history';
+// Sanitize entries so only numeric ids/elapsed and valid dates come out of localStorage
+function loadHistory(){
+  try{
+    return (JSON.parse(localStorage.getItem(HIST_KEY)||'[]')||[])
+      .filter(e=>Number.isInteger(e.dayId)&&Number.isFinite(e.elapsed)&&typeof e.date==='string')
+      .map(e=>({dayId:e.dayId,elapsed:Math.max(0,Math.floor(e.elapsed)),date:new Date(e.date).toISOString()}));
+  }catch{return[];}
+}
+function saveWorkout(){
+  const h=loadHistory();
+  h.unshift({date:new Date().toISOString(),dayId,elapsed});
+  if(h.length>100)h.length=100;
+  localStorage.setItem(HIST_KEY,JSON.stringify(h));
+}
+function lastDone(id){
+  const e=loadHistory().find(x=>x.dayId===id);
+  if(!e)return null;
+  const days=Math.floor((Date.now()-new Date(e.date))/864e5);
+  if(days===0)return'Today';
+  if(days===1)return'Yesterday';
+  return`${days}d ago`;
+}
+function fmtDate(iso){
+  return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
 // ─── STATE ───
 let screen='select',dayId=null,si=0,ei=0,elapsed=0,ticking=false,tickId=null;
 let curSet=1,resting=false,restLeft=0,restTotal=0,restId=null;
@@ -183,18 +211,44 @@ function render(){
 function clearTimers(){clearInterval(restId);clearInterval(timerId);clearInterval(emomId);clearInterval(amrapId);resting=false;timerOn=false;}
 
 function renderSelect(){
+  // All values from DAYS are hardcoded constants; history values are sanitized in loadHistory()
+  const hist=loadHistory();
+  const dayBtns=DAYS.map(d=>{
+    const ld=lastDone(d.id); // returns 'Today','Yesterday','Nd ago', or null — no user input
+    const ldHtml=ld?` · <span style="color:${ld==='Today'?'#4ade80':'var(--tm)'}">${ld}</span>`:'';
+    return`<button class="day-btn" onclick="startDay(${d.id})">
+      <div class="day-num" style="background:${d.color}20;color:${d.color}">${d.id}</div>
+      <div style="flex:1"><div style="font-weight:700;font-size:.9rem;color:var(--tx)">${d.title}</div>
+      <div style="font-size:.72rem;color:var(--tm)">${d.type} · ${d.dur}${ldHtml}</div></div>
+      <div style="color:var(--tm);font-size:1rem">›</div>
+    </button>`;
+  }).join('');
+  // History rows: dayId is an integer, elapsed is a non-negative integer, date is a valid ISO string — all sanitized
+  const histHtml=hist.length===0?'':`<div style="padding:1.25rem 1rem 2rem">
+    <div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tm);font-weight:700;margin-bottom:.5rem">Recent Workouts</div>
+    ${hist.slice(0,8).map(e=>{
+      const day=DAYS.find(d=>d.id===e.dayId); // lookup from hardcoded DAYS, not raw storage value
+      const color=day?day.color:'var(--tm)';
+      const title=day?`Day ${day.id}: ${day.title}`:'Unknown';
+      return`<div style="display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;border-bottom:1px solid var(--s2);font-size:.75rem">
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div style="width:8px;height:8px;border-radius:50%;background:${color}"></div>
+          <span style="color:var(--tx);font-weight:600">${title}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.5rem;color:var(--tm)">
+          <span>${fmt(e.elapsed)}</span>
+          <span style="color:var(--bd)">·</span>
+          <span>${fmtDate(e.date)}</span>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
   app.innerHTML=`<div style="padding:2rem 1.25rem 1rem;text-align:center">
     <div style="font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f0c040,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Workout Tracker</div>
     <div style="font-size:.8rem;color:var(--tm);margin-top:4px">Select today's workout</div>
   </div>
-  <div style="padding:0 1rem 2rem;display:flex;flex-direction:column;gap:.5rem">
-    ${DAYS.map(d=>`<button class="day-btn" onclick="startDay(${d.id})">
-      <div class="day-num" style="background:${d.color}20;color:${d.color}">${d.id}</div>
-      <div style="flex:1"><div style="font-weight:700;font-size:.9rem;color:var(--tx)">${d.title}</div>
-      <div style="font-size:.72rem;color:var(--tm)">${d.type} · ${d.dur}</div></div>
-      <div style="color:var(--tm);font-size:1rem">›</div>
-    </button>`).join('')}
-  </div>`;
+  <div style="padding:0 1rem;display:flex;flex-direction:column;gap:.5rem">${dayBtns}</div>
+  ${histHtml}`;
 }
 
 function renderDone(){
@@ -392,7 +446,7 @@ function nextEx(){
   const d=getDay(),s=d.sections[si];needsFeedback=false;resting=false;curSet=1;
   if(!s.emom&&!s.amrap&&ei<s.ex.length-1){ei++;showInfo=true;render();}
   else if(si<d.sections.length-1){si++;ei=0;showInfo=true;render();}
-  else{stopTick();screen='done';render();}
+  else{stopTick();saveWorkout();screen='done';render();}
 }
 function prevEx(){
   if(ei>0){ei--;curSet=1;needsFeedback=false;resting=false;showInfo=true;render();}
