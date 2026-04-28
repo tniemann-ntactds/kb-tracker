@@ -9,7 +9,7 @@
 <title>Workout Tracker</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0f1115;--s1:#1a1d24;--s2:#22262f;--bd:#2d323d;--tx:#e8e9ec;--tm:#8b8f9a;--ac:#f0c040;--gn:#4ade80;--bl:#60a5fa;--rd:#f87171;--or:#fb923c;--pr:#a78bfa;--cy:#22d3ee}
+:root{--bg:#0f1115;--s1:#1a1d24;--s2:#22262f;--bd:#2d323d;--tx:#e8e9ec;--tm:#8b8f9a;--ac:#fb923c;--gn:#4ade80;--bl:#60a5fa;--rd:#f87171;--or:#fb923c;--pr:#a78bfa;--cy:#22d3ee}
 body{font-family:-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;min-height:100vh;min-height:100dvh;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
 button{font-family:inherit;-webkit-appearance:none}
@@ -22,15 +22,15 @@ button{font-family:inherit;-webkit-appearance:none}
 .btn-primary{background:color-mix(in srgb,var(--color) 15%,transparent);border-color:var(--color);color:var(--color)}
 .btn-ghost{background:transparent;border-color:var(--bd);color:var(--tm)}
 .btn-danger{background:#f8717120;border-color:#f87171;color:#f87171}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:1rem}
-.ex-name{font-size:1.05rem;font-weight:700;flex:1;padding-right:8px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:1rem;overflow:hidden}
+.ex-name{font-size:1.15rem;font-weight:800;flex:1;padding-right:8px}
 .ex-detail{font-size:.8rem;color:var(--tm);white-space:nowrap}
-.sect-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.sect-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
 .sect-note{font-size:.7rem;color:var(--tm)}
-.muscle-tag{font-size:.6rem;padding:.15rem .4rem;background:#f0c04015;color:#f0c040;border-radius:4px;text-transform:uppercase;font-weight:700;letter-spacing:.04em;display:inline-block;margin:0 .15rem .15rem 0}
-.wt-badge{display:inline-flex;align-items:center;gap:6px;padding:.3rem .75rem;background:#f0c04015;border:1px solid #f0c04040;border-radius:8px;margin-bottom:.5rem}
+.muscle-tag{font-size:.6rem;padding:.15rem .4rem;background:#fb923c15;color:#fb923c;border-radius:4px;text-transform:uppercase;font-weight:700;letter-spacing:.04em;display:inline-block;margin:0 .15rem .15rem 0}
+.wt-badge{display:inline-flex;align-items:center;gap:6px;padding:.3rem .75rem;background:#fb923c15;border:1px solid #fb923c40;border-radius:8px;margin-bottom:.5rem}
 .wt-label{font-size:.7rem;color:var(--tm)}
-.wt-val{font-size:.9rem;font-weight:800;color:#f0c040}
+.wt-val{font-size:.9rem;font-weight:800;color:#fb923c}
 .vid-link{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:.35rem .75rem;background:#f8717115;border:1px solid #f8717140;border-radius:6px;color:#f87171;font-size:.7rem;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:.04em}
 .set-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
 .fb-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.35rem}
@@ -39,10 +39,16 @@ button{font-family:inherit;-webkit-appearance:none}
 .fb-label{font-size:.6rem;font-weight:700;line-height:1.2}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:.6rem 1.25rem;background:var(--s1);border-radius:10px;display:flex;align-items:center;gap:.5rem;z-index:100;box-shadow:0 4px 20px #00000080;border:1px solid}
 .progress-bar{height:3px;background:var(--bd);position:relative}
-.progress-fill{height:3px;transition:width .3s}
+.progress-fill{height:3px;transition:width .4s ease}
 .upcoming-row{display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--s1);font-size:.75rem;color:var(--tm)}
-.day-btn{display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;background:var(--s1);border:1px solid var(--bd);border-radius:12px;cursor:pointer;text-align:left;width:100%}
-.day-num{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
+.day-card{position:relative;border-radius:18px;overflow:hidden;height:156px;cursor:pointer;width:100%;border:none;background:var(--s1);display:block}
+.day-card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.day-card-scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,11,14,.96) 0%,rgba(10,11,14,.55) 45%,transparent 100%)}
+.day-card-body{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:.75rem .9rem}
+.day-card-top{display:flex;justify-content:space-between;align-items:flex-start}
+.day-card-bottom{display:flex;flex-direction:column;gap:.15rem}
+.day-num{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;flex-shrink:0}
+.day-type-chip{font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;padding:.2rem .45rem;border-radius:20px;background:rgba(251,146,60,.18);color:#fb923c;border:1px solid rgba(251,146,60,.35)}
 </style>
 </head>
 <body>
@@ -143,13 +149,47 @@ const DAYS=[
 {k:"KB Thrusters",d:"8 reps"},{k:"Burpees",d:"6 reps"},{k:"KB Swings",d:"12 reps"}]}]}
 ];
 
+// ─── IMAGES ───
+const DAY_IMGS={1:'1574680096145-d05b474e2155',2:'1552674605-db6ffd4facb5',3:'1556817411-31ae72fa3ea0',4:'1599058917212-d750089bc07e',5:'1601422407692-ec4eeec1d9b3',6:'1607962837359-5e7e89f86776'};
+function imgUrl(id){return`https://images.unsplash.com/photo-${id}?w=800&q=80&fit=crop&crop=center`;}
+
 // ─── MUSCLE MAP ───
-const MMAP={chest:{x:22,y:18,w:16,h:8},shoulders:{x:14,y:14,w:8,h:6},triceps:{x:10,y:22,w:5,h:10},biceps:{x:11,y:22,w:5,h:9},"upper back":{x:20,y:14,w:20,h:10},lats:{x:18,y:22,w:6,h:10},core:{x:22,y:27,w:16,h:10},glutes:{x:22,y:34,w:16,h:8},quads:{x:18,y:40,w:10,h:14},hamstrings:{x:20,y:40,w:10,h:14},calves:{x:20,y:54,w:8,h:8},hips:{x:16,y:34,w:8,h:6},ankles:{x:20,y:60,w:8,h:4},"full body":{x:15,y:14,w:30,h:50},forearms:{x:8,y:30,w:5,h:8},traps:{x:22,y:10,w:16,h:6}};
+const MMAP={
+  chest:{d:"M19,18 Q23,16 28.5,18 Q30,24 27,27 Q22,28 19.5,24 Z M31.5,18 Q37,16 41,18 Q41,24 40.5,27 Q36,28 30,24 Z"},
+  shoulders:{d:"M17,16 L10,19 L11,26 L16,25 Z M43,16 L50,19 L49,26 L44,25 Z"},
+  biceps:{d:"M10,22 L9,32 L13,33 L14,25 Z M50,22 L51,32 L47,33 L46,25 Z"},
+  triceps:{d:"M13,22 L11,33 L14,37 L17,34 L18,24 Z M47,22 L49,33 L46,37 L43,34 L42,24 Z"},
+  "upper back":{d:"M18,16 L42,16 L41,24 Q36,27 30,27 Q24,27 19,24 Z"},
+  lats:{d:"M19,22 L17,32 L19,40 L22,41 L21,30 Z M41,22 L43,32 L41,40 L38,41 L39,30 Z"},
+  core:{d:"M25.5,26 L34.5,26 L34,40 Q30,41.5 26,40 Z"},
+  glutes:{d:"M20,42 L40,42 L41.5,49 L18.5,49 Z"},
+  quads:{d:"M19.5,49 Q18.5,55 20,62 L26,62 Q27.5,55 26.5,49 Z M33.5,49 Q33,55 34,62 L40,62 Q41,55 40.5,49 Z"},
+  hamstrings:{d:"M20,49 Q18,57 20.5,62 L25.5,62 Q27,57 26.5,49 Z M34,49 Q33.5,57 34.5,62 L39.5,62 Q41,57 40,49 Z"},
+  calves:{d:"M20,62 L26,62 L24.5,68 L21,68 Z M34,62 L40,62 L38.5,68 L35,68 Z"},
+  hips:{d:"M19,40 L41,40 L40.5,47 L19.5,47 Z"},
+  ankles:{d:"M21,66 L25,66 L24.5,68 L21.5,68 Z M35,66 L39,66 L38.5,68 L35.5,68 Z"},
+  "full body":{d:"M17,16 L43,16 L41,40 Q38,44 30,44 Q22,44 19,40 Z M21,43 L39,43 L40.5,48 L19.5,48 Z M17,16 L10,19 L9,36 L14,37 L18,24 Z M43,16 L50,19 L51,36 L46,37 L42,24 Z M9,36 L7,42 L9,48 L13,47 L14,37 Z M51,36 L53,42 L51,48 L47,47 L46,37 Z M19.5,48 L26.5,48 L26,63 L20,63 Z M33.5,48 L40.5,48 L40,63 L34,63 Z M20,63 L26,63 L24.5,68 L21,68 Z M34,63 L40,63 L38.5,68 L35,68 Z"},
+  forearms:{d:"M9,36 L7,42 L9,48 L13,47 L14,37 Z M51,36 L53,42 L51,48 L47,47 L46,37 Z"},
+  traps:{d:"M22,10 L38,10 L40,17 L20,17 Z"}
+};
 
 function muscleSVG(groups){
-  let rects='<ellipse cx="30" cy="7" rx="6" ry="7" fill="#2d323d"/><rect x="20" y="13" rx="4" width="20" height="26" fill="#2d323d"/><rect x="8" y="15" rx="3" width="8" height="22" fill="#2d323d" transform="rotate(-8 12 15)"/><rect x="44" y="15" rx="3" width="8" height="22" fill="#2d323d" transform="rotate(8 48 15)"/><rect x="21" y="37" rx="3" width="8" height="22" fill="#2d323d" transform="rotate(-3 25 37)"/><rect x="31" y="37" rx="3" width="8" height="22" fill="#2d323d" transform="rotate(3 35 37)"/><rect x="20" y="56" rx="2" width="7" height="8" fill="#2d323d"/><rect x="33" y="56" rx="2" width="7" height="8" fill="#2d323d"/>';
-  groups.forEach(g=>{const p=MMAP[g.toLowerCase()];if(p)rects+=`<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="3" fill="#f0c040" opacity="0.7"/>`;});
-  return `<svg width="56" height="56" viewBox="0 0 60 68" fill="none">${rects}</svg>`;
+  const s='#1c1f2a',b='#2a2f42';
+  let r=`<defs><filter id="mg" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<ellipse cx="30" cy="7" rx="5.5" ry="6.5" fill="${s}" stroke="${b}" stroke-width=".8"/>
+<path d="M27.5,13 L32.5,13 L32,16 L28,16 Z" fill="${s}" stroke="${b}" stroke-width=".5"/>
+<path d="M17,16 L43,16 L41,40 Q38,44 30,44 Q22,44 19,40 Z" fill="${s}" stroke="${b}" stroke-width=".9"/>
+<path d="M21,43 L39,43 L40.5,48 L19.5,48 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M17,16 L10,19 L9,36 L14,37 L18,24 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M43,16 L50,19 L51,36 L46,37 L42,24 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M9,36 L7,42 L9,48 L13,47 L14,37 Z" fill="${s}" stroke="${b}" stroke-width=".6"/>
+<path d="M51,36 L53,42 L51,48 L47,47 L46,37 Z" fill="${s}" stroke="${b}" stroke-width=".6"/>
+<path d="M19.5,48 L26.5,48 L26,63 L20,63 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M33.5,48 L40.5,48 L40,63 L34,63 Z" fill="${s}" stroke="${b}" stroke-width=".7"/>
+<path d="M20,63 L26,63 L24.5,68 L21,68 Z" fill="${s}" stroke="${b}" stroke-width=".6"/>
+<path d="M34,63 L40,63 L38.5,68 L35,68 Z" fill="${s}" stroke="${b}" stroke-width=".6"/>`;
+  groups.forEach(g=>{const p=MMAP[g.toLowerCase()];if(p)r+=`<path d="${p.d}" fill="#fb923c" opacity=".75" filter="url(#mg)"/>`;});
+  return `<svg width="72" height="72" viewBox="0 0 60 68" fill="none">${r}</svg>`;
 }
 
 // ─── UTILS ───
@@ -192,7 +232,7 @@ let curSet=1,resting=false,restLeft=0,restTotal=0,restId=null;
 let timerLeft=0,timerTotal=0,timerOn=false,timerId=null;
 let emomLeft=0,emomOn=false,emomId=null;
 let amrapLeft=0,amrapOn=false,amrapId=null,amrapRounds=0;
-let showInfo=true,needsFeedback=false,toastData=null,toastId=null;
+let showInfo=false,needsFeedback=false,toastData=null,toastId=null;
 
 function startTick(){ticking=true;tickId=setInterval(()=>{elapsed++;updateTopBar();},1000);}
 function stopTick(){ticking=false;clearInterval(tickId);}
@@ -213,23 +253,31 @@ function render(){
 function clearTimers(){clearInterval(restId);clearInterval(timerId);clearInterval(emomId);clearInterval(amrapId);resting=false;timerOn=false;emomOn=false;amrapOn=false;}
 
 function renderSelect(){
-  // All values from DAYS are hardcoded constants; history values are sanitized in loadHistory()
+  // All values from DAYS/DAY_IMGS are hardcoded constants; history values are sanitized in loadHistory()
   const hist=loadHistory();
-  const dayBtns=DAYS.map(d=>{
+  const dayCards=DAYS.map(d=>{
     const ld=lastDone(d.id,hist); // returns 'Today','Yesterday','Nd ago', or null — no user input
-    const ldHtml=ld?` · <span style="color:${ld==='Today'?'#4ade80':'var(--tm)'}">${ld}</span>`:'';
-    return`<button class="day-btn" onclick="startDay(${d.id})">
-      <div class="day-num" style="background:${d.color}20;color:${d.color}">${d.id}</div>
-      <div style="flex:1"><div style="font-weight:700;font-size:.9rem;color:var(--tx)">${d.title}</div>
-      <div style="font-size:.72rem;color:var(--tm)">${d.type} · ${d.dur}${ldHtml}</div></div>
-      <div style="color:var(--tm);font-size:1rem">›</div>
+    const ldHtml=ld?` · <span style="color:${ld==='Today'?'#4ade80':'rgba(255,255,255,.55)'}">${ld}</span>`:'';
+    return`<button class="day-card" onclick="startDay(${d.id})">
+      <img class="day-card-img" src="${imgUrl(DAY_IMGS[d.id])}" alt="" loading="lazy" onerror="this.style.display='none'">
+      <div class="day-card-scrim"></div>
+      <div class="day-card-body">
+        <div class="day-card-top">
+          <div class="day-num" style="background:${d.color}30;color:${d.color};border:1.5px solid ${d.color}60">${d.id}</div>
+          <div class="day-type-chip">${d.type}</div>
+        </div>
+        <div class="day-card-bottom">
+          <div style="font-weight:800;font-size:1.05rem;color:#fff;letter-spacing:.01em;text-shadow:0 1px 8px #00000099">${d.title}</div>
+          <div style="font-size:.68rem;color:rgba(255,255,255,.6)">${d.dur}${ldHtml}</div>
+        </div>
+      </div>
     </button>`;
   }).join('');
-  // History rows: dayId is an integer, elapsed is a non-negative integer, date is a valid ISO string — all sanitized
+  // History rows: dayId is an integer, elapsed is non-negative integer, date is valid ISO string — all sanitized
   const histHtml=hist.length===0?'':`<div style="padding:1.25rem 1rem 2rem">
-    <div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tm);font-weight:700;margin-bottom:.5rem">Recent Workouts</div>
+    <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--tm);font-weight:800;margin-bottom:.6rem">Recent</div>
     ${hist.slice(0,8).map(e=>{
-      const day=DAYS.find(d=>d.id===e.dayId); // lookup from hardcoded DAYS, not raw storage value
+      const day=DAYS.find(d=>d.id===e.dayId); // lookup from hardcoded DAYS
       const color=day?day.color:'var(--tm)';
       const title=day?`Day ${day.id}: ${day.title}`:'Unknown';
       return`<div style="display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;border-bottom:1px solid var(--s2);font-size:.75rem">
@@ -238,30 +286,32 @@ function renderSelect(){
           <span style="color:var(--tx);font-weight:600">${title}</span>
         </div>
         <div style="display:flex;align-items:center;gap:.5rem;color:var(--tm)">
-          <span>${fmt(e.elapsed)}</span>
-          <span style="color:var(--bd)">·</span>
-          <span>${fmtDate(e.date)}</span>
+          <span>${fmt(e.elapsed)}</span><span style="color:var(--bd)">·</span><span>${fmtDate(e.date)}</span>
         </div>
       </div>`;
     }).join('')}
   </div>`;
-  app.innerHTML=`<div style="padding:2rem 1.25rem 1rem;text-align:center">
-    <div style="font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f0c040,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Workout Tracker</div>
-    <div style="font-size:.8rem;color:var(--tm);margin-top:4px">Select today's workout</div>
+  app.innerHTML=`<div style="padding:2.25rem 1.25rem 1.25rem">
+    <div style="font-size:1.85rem;font-weight:900;letter-spacing:.03em;color:var(--tx);line-height:1">WORKOUT</div>
+    <div style="font-size:.8rem;color:var(--tm);margin-top:.35rem">What do you want to do today?</div>
   </div>
-  <div style="padding:0 1rem;display:flex;flex-direction:column;gap:.5rem">${dayBtns}</div>
+  <div style="padding:0 1rem;display:flex;flex-direction:column;gap:.75rem">${dayCards}</div>
   ${histHtml}`;
 }
 
 function renderDone(){
   const d=getDay();
-  app.innerHTML=`<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center">
-    <div style="font-size:2.5rem;margin-bottom:.5rem">💪</div>
-    <div style="font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#4ade80,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Workout Complete</div>
-    <div style="font-size:.85rem;color:var(--tm);margin:.5rem 0">Day ${d.id}: ${d.title}</div>
-    <div style="font-size:2.2rem;font-weight:800;font-variant-numeric:tabular-nums;color:#f0c040;margin:.25rem 0">${fmt(elapsed)}</div>
-    <div style="font-size:.7rem;color:var(--tm)">Total time</div>
-    <button class="btn btn-primary" style="--color:#4ade80;margin-top:1.5rem;padding:.65rem 1.75rem;font-size:.85rem;font-weight:700;border-radius:10px" onclick="backToMenu()">Back to Menu</button>
+  // DAY_IMGS values are hardcoded integer keys; fallback is a verified photo ID
+  app.innerHTML=`<div style="min-height:100vh;min-height:100dvh;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;overflow:hidden">
+    <img src="${imgUrl(DAY_IMGS[d.id])}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0" alt="" loading="eager" onerror="this.style.display='none'">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0f111590 0%,#0f1115e0 100%);z-index:1"></div>
+    <div style="position:relative;z-index:2">
+      <div style="font-size:3rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#fff;line-height:1.05;text-shadow:0 2px 20px #00000060">WORKOUT<br>COMPLETE</div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,.6);margin:.85rem 0 .3rem;letter-spacing:.04em;text-transform:uppercase">Day ${d.id} · ${d.title}</div>
+      <div style="font-size:3rem;font-weight:900;font-variant-numeric:tabular-nums;color:#fb923c;text-shadow:0 2px 12px #fb923c40">${fmt(elapsed)}</div>
+      <div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.4)">Total Time</div>
+      <button class="btn btn-primary" style="--color:#4ade80;margin-top:2rem;padding:.7rem 2rem;font-size:.9rem;font-weight:700;border-radius:12px" onclick="backToMenu()">← Back to Menu</button>
+    </div>
   </div>`;
 }
 
@@ -272,14 +322,15 @@ function renderWorkout(){
       <button onclick="backToMenu()" style="background:none;border:none;color:var(--tm);font-size:.8rem;cursor:pointer">← Back</button>
       <div style="text-align:center"><div style="font-size:.6rem;color:var(--tm);text-transform:uppercase;letter-spacing:.08em">Day ${d.id}</div>
       <div style="font-size:.8rem;font-weight:700;color:${c}">${d.title}</div></div>
-      <div id="elapsed" style="font-variant-numeric:tabular-nums;font-size:.8rem;font-weight:700;color:#f0c040">${fmt(elapsed)}</div>
+      <div id="elapsed" style="font-variant-numeric:tabular-nums;font-size:.8rem;font-weight:700;color:#fb923c">${fmt(elapsed)}</div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${c}"></div></div>
   </div>`;
 
-  html+=`<div style="padding:.75rem 1.25rem .25rem"><div class="sect-label" style="color:${c}">${s.name}</div>`;
-  if(s.note)html+=`<div class="sect-note">${s.note}</div>`;
-  html+=`</div>`;
+  html+=`<div style="padding:.85rem 1.25rem .3rem;display:flex;align-items:center;gap:.6rem">
+    <div style="width:3px;height:1.2rem;border-radius:2px;background:${c};flex-shrink:0"></div>
+    <div><div class="sect-label" style="color:${c}">${s.name}</div>${s.note?`<div class="sect-note">${s.note}</div>`:''}</div>
+  </div>`;
 
   if(s.emom){html+=renderEMOM(s,c);}
   else if(s.amrap){html+=renderAMRAP(s,c);}
@@ -395,7 +446,7 @@ function renderUpcoming(d,c){
   else up.forEach(u=>{
     const um=MDB[u.k];
     h+=`<div class="upcoming-row"><span>${u.k}</span><span style="display:flex;align-items:center;gap:6px">`;
-    if(um&&um.w&&um.w!=='none'&&um.w!=='band')h+=`<span style="font-size:.6rem;color:#f0c040">${WT[um.w]}</span>`;
+    if(um&&um.w&&um.w!=='none'&&um.w!=='band')h+=`<span style="font-size:.6rem;color:#fb923c">${WT[um.w]}</span>`;
     h+=`<span style="font-size:.7rem">${u.d}</span></span></div>`;
   });
   h+=`</div>`;
@@ -426,12 +477,12 @@ function renderAMRAP(s,c){
   s.ex.forEach(ex=>{
     const um=MDB[ex.k];
     h+=`<div style="font-size:.8rem;color:var(--tm);padding:.15rem 0"><span style="color:var(--tx);font-weight:600">${ex.k}</span> — ${ex.d}`;
-    if(um?.w&&um.w!=='none')h+=` <span style="font-size:.65rem;color:#f0c040">(${WT[um.w]})</span>`;
+    if(um?.w&&um.w!=='none')h+=` <span style="font-size:.65rem;color:#fb923c">(${WT[um.w]})</span>`;
     h+=`</div>`;
   });
   h+=`</div><div style="display:flex;align-items:center;justify-content:center;gap:.75rem">
     <button onclick="amrapRounds=Math.max(0,amrapRounds-1);$('amrap-cnt').textContent=amrapRounds" style="width:34px;height:34px;border-radius:50%;background:var(--s1);border:1px solid var(--bd);color:var(--tm);font-size:1.1rem;cursor:pointer">−</button>
-    <div><div id="amrap-cnt" style="font-size:1.8rem;font-weight:800;color:#f0c040">0</div><div style="font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tm)">Rounds</div></div>
+    <div><div id="amrap-cnt" style="font-size:1.8rem;font-weight:800;color:#fb923c">0</div><div style="font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tm)">Rounds</div></div>
     <button onclick="amrapRounds++;$('amrap-cnt').textContent=amrapRounds" style="width:34px;height:34px;border-radius:50%;background:var(--s1);border:1px solid ${c};color:${c};font-size:1.1rem;cursor:pointer">+</button></div>
     <button id="amrap-btn" class="btn btn-primary" style="--color:${c};margin-top:.75rem;padding:.55rem 1.75rem;font-size:.85rem;font-weight:700" onclick="toggleAMRAP()">Start AMRAP</button>
     <div style="margin-top:.75rem"><button class="btn btn-primary" style="--color:${c}" onclick="nextEx()">Finish Workout →</button></div>
@@ -440,19 +491,19 @@ function renderAMRAP(s,c){
 }
 
 // ─── ACTIONS ───
-function startDay(id){dayId=id;si=0;ei=0;elapsed=0;curSet=1;resting=false;needsFeedback=false;showInfo=true;screen='workout';startTick();render();}
+function startDay(id){dayId=id;si=0;ei=0;elapsed=0;curSet=1;resting=false;needsFeedback=false;showInfo=false;screen='workout';startTick();render();}
 function backToMenu(){stopTick();clearTimers();screen='select';dayId=null;render();}
 function toggleInfo(){showInfo=!showInfo;render();}
 
 function nextEx(){
   const d=getDay(),s=d.sections[si];needsFeedback=false;resting=false;curSet=1;
-  if(!s.emom&&!s.amrap&&ei<s.ex.length-1){ei++;showInfo=true;render();}
-  else if(si<d.sections.length-1){si++;ei=0;showInfo=true;render();}
+  if(!s.emom&&!s.amrap&&ei<s.ex.length-1){ei++;showInfo=false;render();}
+  else if(si<d.sections.length-1){si++;ei=0;showInfo=false;render();}
   else{stopTick();saveWorkout();screen='done';render();}
 }
 function prevEx(){
-  if(ei>0){ei--;curSet=1;needsFeedback=false;resting=false;showInfo=true;render();}
-  else if(si>0){const ps=getDay().sections[si-1];si--;ei=ps.emom||ps.amrap?0:ps.ex.length-1;curSet=1;needsFeedback=false;resting=false;showInfo=true;render();}
+  if(ei>0){ei--;curSet=1;needsFeedback=false;resting=false;showInfo=false;render();}
+  else if(si>0){const ps=getDay().sections[si-1];si--;ei=ps.emom||ps.amrap?0:ps.ex.length-1;curSet=1;needsFeedback=false;resting=false;showInfo=false;render();}
 }
 
 function finishSet(){
@@ -565,14 +616,14 @@ async function sha256(str){
 function initApp(){renderPin();}
 
 function renderPin(){
-  const dots=[0,1,2,3].map(i=>`<div style="width:14px;height:14px;border-radius:50%;background:${i<pinInput.length?'#f0c040':'var(--bd)'};transition:background .15s"></div>`).join('');
+  const dots=[0,1,2,3].map(i=>`<div style="width:14px;height:14px;border-radius:50%;background:${i<pinInput.length?'#fb923c':'var(--bd)'};transition:background .15s"></div>`).join('');
   const keys=[1,2,3,4,5,6,7,8,9,'','0','⌫'].map(k=>{
     if(k==='')return'<div></div>';
     const back=k==='⌫';
     return`<button onclick="${back?'pinDel()':'pinTap('+k+')'}" style="height:64px;border-radius:14px;background:var(--s1);border:1px solid var(--bd);font-size:${back?'1.4':'1.3'}rem;font-weight:700;color:${back?'var(--tm)':'var(--tx)'};cursor:pointer">${k}</button>`;
   }).join('');
   app.innerHTML=`<div style="min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem">
-    <div style="font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f0c040,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.25rem">KB Tracker</div>
+    <div style="font-size:1.4rem;font-weight:900;letter-spacing:.04em;color:#fb923c;margin-bottom:.25rem">KB TRACKER</div>
     <div style="font-size:.8rem;color:var(--tm);margin-bottom:2.5rem">Enter PIN</div>
     <div id="pin-dots" style="display:flex;gap:1rem;margin-bottom:3rem">${dots}</div>
     <div id="pin-err" style="color:var(--or);font-size:.7rem;margin-top:-2rem;margin-bottom:2rem;text-align:center;min-height:1em"></div>
